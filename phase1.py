@@ -1,10 +1,11 @@
 import argparse
 import datetime
-import requests
 import json
+import requests
 
 def analyse_commande():
-    parser = argparse.ArgumentParser(description="Extraction de valeurs historiques pour un ou plusieurs symboles boursiers.")
+    parser = argparse.ArgumentParser(description="Extraction de valeurs historiques pour un"
+                                     "ou plusieurs symboles boursiers.")
     parser.add_argument(
         nargs = "+",
         metavar = 'symbole',
