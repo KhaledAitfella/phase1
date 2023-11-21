@@ -4,6 +4,10 @@ import json
 import requests
 
 def analyse_commande():
+    """
+    Générer un interpréteur de commande et retourne un  renvoie un objet Namespace avec l'attribut «symboles» pour la liste des symboles
+    et les attributs «début», «fin» et «valeur» pour les arguments optionnels de la ligne de commande
+    """
     parser = argparse.ArgumentParser(description="Extraction de valeurs historiques pour un"
                                      "ou plusieurs symboles boursiers.")
     parser.add_argument(
@@ -37,8 +41,9 @@ def analyse_commande():
     )
     return parser.parse_args()
 
-def historique_serveur(symbole, debut, fin):
-    url = f'https://pax.ulaval.ca/action/{symbole}/historique/'
+def historique_serveur(symbole__, debut, fin):
+    ##fait la recherche dans un site url d'un symbole donner en entree
+    url = f'https://pax.ulaval.ca/action/{symbole__}/historique/'
 
     params = {
         'début': debut,
@@ -47,14 +52,18 @@ def historique_serveur(symbole, debut, fin):
     réponse = requests.get(url=url, params=params)
     return json.loads(réponse.text)
 
-def produire_historique(symbole, debut, fin, valeur):
-    historique = historique_serveur(symbole, debut, fin)
+def produire_historique(symbole_, debut, fin, valeur):
+    #affiche les tuples [date, valeur] retourner par l'appelle de la fonction istorique_serveur
+    historique = historique_serveur(symbole_, debut, fin)
     if historique is not None:
         for date, valeurs in historique.get('historique', {}).items():
             print(f'Date: {date}, Valeur ({valeur}): {valeurs[valeur]}')
-            
+   
 args = analyse_commande()
-print(f'titre = {args.symbole[0]}: valeur = {args.valeur}, debut = {args.date_deb}, fin = {args.date_fin}')
+print(f'titre = {args.symbole[0]}: '
+      f'valeur = {args.valeur}, '
+      f'debut = {args.date_deb}, '
+      f'fin = {args.date_fin}')
 
 for symbole in args.symbole:
     produire_historique(symbole, args.date_deb, args.date_fin, args.valeur)
